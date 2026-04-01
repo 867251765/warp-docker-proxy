@@ -40,7 +40,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
-            ghcr.io/${{ github.repository }}:latest-lib
+            latest-lib
       # 6. 设置 Docker Buildx (支持缓存和高级构建)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
