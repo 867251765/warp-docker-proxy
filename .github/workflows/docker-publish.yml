@@ -5,6 +5,7 @@ on:
   push:
     branches: [ "release_lib" ]
     tags: [ '*.*.*' ]
+  workflow_dispatch:
 
 jobs:
   build-and-push:
