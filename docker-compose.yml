@@ -16,6 +16,8 @@ services:
       # Set THE WARP_TOKEN if you want to use ZeroTrust 
       # it must start with "com.cloudflare.warp://"
       - WARP_TOKEN=
+      - PROXY_USER=
+      - PROXY_PASSWORD=
     volumes:
       - ./data:/var/lib/cloudflare-warp
     healthcheck:
