@@ -39,9 +39,6 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
-            # 下面这行是新增的：如果是 main 分支，同时打上 latest 标签
-            type=raw,value=latest-lib,enable=${{ github.ref == 'refs/heads/release_lib' }}
-
       # 6. 设置 Docker Buildx (支持缓存和高级构建)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

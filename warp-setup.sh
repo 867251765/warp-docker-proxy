@@ -40,13 +40,13 @@ else
   echo "connect warp"
   sudo -u warpuser warp-cli --accept-tos connect
 
-  # Loop to check if WARP is healthy
+  # Loop to check if WARP is Connected
   RETRY_COUNT=1
   while true; do
       status=$(sudo -u warpuser warp-cli --accept-tos status)
       trace=$(curl -s --max-time 10 https://www.cloudflare.com/cdn-cgi/trace | grep warp)
-        if [[ $status == *"healthy"* ]] && [[ -n "$trace" ]] && [[ ! $trace == *"off"* ]]; then
-            echo "WARP is healthy and active (warp=on/plus)."
+        if [[ $status == *"Connected"* ]] && [[ -n "$trace" ]] && [[ ! $trace == *"off"* ]]; then
+            echo "WARP is Connected and active (warp=on/plus)."
             echo "Trace info: $trace"
             break
         else
@@ -73,7 +73,7 @@ while true; do
     # 捕获状态，即使命令失败也不让脚本退出
     status=$(sudo -u warpuser warp-cli --accept-tos status 2>/dev/null || echo "disconnected")
 
-    if [[ $status != *"healthy"* ]]; then
+    if [[ $status != *"Connected"* ]]; then
         echo "WARP connection lost. Attempting to reconnect... (Attempt $((RETRY_COUNT+1)))"
 
         # 尝试重连，如果重连失败，等待时间逐渐增加 (5s, 10s, 15s...)
