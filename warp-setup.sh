@@ -41,7 +41,7 @@ else
   sudo -u warpuser warp-cli --accept-tos connect
 
   # Loop to check if WARP is healthy
-  RETRY_COUNT=0
+  RETRY_COUNT=1
   while true; do
       status=$(sudo -u warpuser warp-cli --accept-tos status)
       trace=$(curl -s --max-time 10 https://www.cloudflare.com/cdn-cgi/trace | grep warp)
@@ -66,14 +66,14 @@ fi
 echo "WARP setup completed successfully. Monitoring connection..."
 
 # 持续监控连接是否成功
-RETRY_COUNT=0
+RETRY_COUNT=1
 while true; do
     sleep 30
 
     # 捕获状态，即使命令失败也不让脚本退出
     status=$(sudo -u warpuser warp-cli --accept-tos status 2>/dev/null || echo "disconnected")
 
-    if [[ $status != *"Connected"* ]]; then
+    if [[ $status != *"healthy"* ]]; then
         echo "WARP connection lost. Attempting to reconnect... (Attempt $((RETRY_COUNT+1)))"
 
         # 尝试重连，如果重连失败，等待时间逐渐增加 (5s, 10s, 15s...)
@@ -84,7 +84,7 @@ while true; do
             sleep $backoff_time
             ((RETRY_COUNT++))
         else
-            RETRY_COUNT=0 # 重连成功，重置计数器
+            RETRY_COUNT=1 # 重连成功，重置计数器
         fi
     fi
 done
