@@ -12,9 +12,9 @@ jobs:
         uses: snok/container-retention-policy@v2
         with:
           image-names: warp-docker-proxy
-          # 只清理 sha- 开头的标签，保护 latest 和其他分支标签
           tag-match-regex: ^sha-.*$
-
-          cut-off: 7 days ago UTC   # 清理 7 天前的 sha 镜像
-          keep-at-least: 5          # 即使超过 7 天，也至少保留最新的 5 个 sha 镜像
+          cut-off: 7 days ago UTC
+          keep-at-least: 5
           token: ${{ secrets.GITHUB_TOKEN }}
+          # 👇 新增这一行，明确指定账户类型
+          account-type: personal
