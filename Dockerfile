@@ -13,24 +13,19 @@ RUN apt update && apt install -y \
     supervisor \
     lsb-release
 
-COPY lib/gost_2.12.0_linux_amd64.tar.gz /tmp/gost.tar.gz
-
-RUN tar -zxvf /tmp/gost.tar.gz -C /usr/local/bin/ \
-    && chmod +x /usr/local/bin/gost \
-    && rm /tmp/gost.tar.gz
-
 # Add Cloudflare GPG key and repository
 RUN curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
 
-COPY ./lib/cloudflare-warp_2026.1.150.0_amd64.deb /tmp/warp.deb
+# install gost
+COPY lib/gost_2.12.0_linux_amd64.tar.gz /tmp/gost.tar.gz
+RUN tar -zxvf /tmp/gost.tar.gz -C /usr/local/bin/ && chmod +x /usr/local/bin/gost
+# install gost
+COPY lib/cloudflare-warp_2026.1.150.0_amd64.deb /tmp/warp.deb
+RUN dpkg -i /tmp/warp.deb
 
-# Install cloudflare-warp from official repository
-RUN apt update && dpkg -i /tmp/warp.deb
-
-# Clean up package cache
-RUN apt clean && \
-    rm -rf /var/lib/apt/lists/*
+# clean tmp pkg and apt
+RUN rm /tmp/* && apt clean && rm -rf /var/lib/apt/lists/*
 
 # Create a non-root user for WARP registration  
 # Use UID 1001 to avoid conflicts with existing users
