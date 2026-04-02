@@ -19,7 +19,7 @@ RUN curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --de
     echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
 
 # install gost
-RUN wget -O /tmp/gost.tar.gz https://github.com/ginuerzh/gost/releases/download/v2.12.0/gost_2.12.0_linux_arm64.tar.gz
+RUN wget -O /tmp/gost.tar.gz https://github.com/ginuerzh/gost/releases/download/v2.12.0/gost_2.12.0_linux_amd64.tar.gz
 RUN tar -zxvf /tmp/gost.tar.gz -C /usr/local/bin/ && chmod +x /usr/local/bin/gost
 # install gost
 RUN wget -O /tmp/warp.deb https://downloads.cloudflareclient.com/v1/download/trixie-intel/version/2026.1.150.0
