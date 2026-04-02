@@ -28,14 +28,14 @@ while true; do
         while IFS= read -r file; do
             if [ -f "$file" ]; then
                 # 获取文件大小 (静默执行)
-                current_size=$(sudo -u warpuser stat -c%s "$file" 2>/dev/null)
+                current_size=$(sudo -u cloudflare stat -c%s "$file" 2>/dev/null)
 
                 # 如果大于设定值，则截断
                 if [ "$current_size" -gt "$RETAIN_BYTES" ]; then
                     # 核心清理逻辑
-                    sudo -u warpuser sh -c "tail -c $RETAIN_BYTES '$file' > '${file}.tmp' && mv '${file}.tmp' '$file'"
+                    sudo -u cloudflare sh -c "tail -c $RETAIN_BYTES '$file' > '${file}.tmp' && mv '${file}.tmp' '$file'"
                 fi
             fi
-        done < <(sudo -u warpuser find "$LOG_DIR" -maxdepth $MAX_DEPTH -type f \( -name "*.log" -o -name "*.txt" \))
+        done < <(sudo -u cloudflare find "$LOG_DIR" -maxdepth $MAX_DEPTH -type f \( -name "*.log" -o -name "*.txt" \))
     done
 done
