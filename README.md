@@ -26,12 +26,12 @@ version: '3'
 
 services:
   warp-proxy:
-    image: "ghcr.io/867251765/warp-docker-proxy:latest-lib"
+    image: "ghcr.io/liuxc-hub/warp-docker-proxy:latest"
     container_name: warp-docker-proxy
     hostname: warp-docker-proxy
     ports:
       - "41080:1080" # 映射端口，宿主机:容器
-    restart: unless-stopped    
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_ADMIN
@@ -54,7 +54,7 @@ services:
       # 如果不填，则代理无需密码即可连接
       - PROXY_USER=
       - PROXY_PASSWORD=
-      
+
     volumes:
       - ./data:/var/lib/cloudflare-warp # 持久化 WARP 身份数据
       - ./logs:/logs                    # 挂载日志目录
@@ -64,6 +64,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
+    networks:
+      - warp-net
+networks:
+  warp-net:
+
 ```
 
 ---
@@ -175,7 +180,7 @@ services:
 
 #### 镜像更新
 ```bash
-docker pull ghcr.io/867251765/warp-docker-proxy:latest-lib
+docker pull ghcr.io/liuxc-hub/warp-docker-proxy:latest
 docker-compose down
 docker-compose up -d
 ```

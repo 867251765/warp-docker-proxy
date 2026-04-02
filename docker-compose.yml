@@ -1,32 +1,46 @@
+version: '3'
+
 services:
   warp-proxy:
-    image: "ghcr.io/867251765/warp-docker-proxy:latest-lib"
+    image: "ghcr.io/liuxc-hub/warp-docker-proxy:latest"
     container_name: warp-docker-proxy
     hostname: warp-docker-proxy
     ports:
-      - "41080:1080"
-    restart: unless-stopped    
+      - "41080:1080" # 映射端口，宿主机:容器
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_ADMIN
     devices:
-      - /dev/net/tun:/dev/net/tun      
+      - /dev/net/tun:/dev/net/tun # 必须：用于 WARP 隧道
     environment:
       - DEBIAN_FRONTEND=noninteractive
-      # Set WARP_TOKEN if you want to use ZeroTrust
-      # ep "com.cloudflare.warp://"
+      # --- 核心配置 ---
+      
+      # 1. Zero Trust 模式 (不填默认Free模式)
+      # 登陆 https://[team].cloudflareaccess.com/warp 认证后获取auth接口信息
+      # 填入 com.cloudflare.warp:// 开头的 Token
       - WARP_TOKEN=
-      # set PROXY_USER and PROXY_PASSWORD if you want auth your proxy
+      
+      # 2. Free 模式 License (可选)
+      # 填入你的 WARP+ 或 Teams License Key
+      - WARP_LICENSE=
+      
+      # 3. 代理认证 (可选)
+      # 如果不填，则代理无需密码即可连接
       - PROXY_USER=
       - PROXY_PASSWORD=
-      # set WARP_LICENSE if you have license with free (not ZeroTrust)
-      - WARP_LICENSE=
+
     volumes:
-      - ./data:/var/lib/cloudflare-warp
-      - ./logs:/logs
+      - ./data:/var/lib/cloudflare-warp # 持久化 WARP 身份数据
+      - ./logs:/logs                    # 挂载日志目录
     healthcheck:
       test: ["CMD", "warp-cli", "status"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
+    networks:
+      - warp-net
+networks:
+  warp-net:
