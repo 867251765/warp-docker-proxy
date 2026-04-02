@@ -11,7 +11,6 @@ RUN apt update && apt install -y \
     libpcap0.8 \
     sudo \
     supervisor \
-    procps \
     lsb-release
 
 COPY lib/gost_2.12.0_linux_amd64.tar.gz /tmp/gost.tar.gz
@@ -35,12 +34,12 @@ RUN apt clean && \
 
 # Create a non-root user for WARP registration  
 # Use UID 1001 to avoid conflicts with existing users
-RUN useradd -m -s /bin/bash -u 1001 warpuser
+RUN useradd -m -s /bin/bash -u 1001 cloudflare
 
-# Create a wrapper script to run WARP commands as warpuser
+# Create a wrapper script to run WARP commands as cloudflare
 RUN echo '#!/bin/bash\n\
-exec su -c "$*" warpuser\n\
-' > /usr/local/bin/run-as-warpuser && chmod +x /usr/local/bin/run-as-warpuser
+exec su -c "$*" cloudflare\n\
+' > /usr/local/bin/run-as-cloudflare && chmod +x /usr/local/bin/run-as-cloudflare
 
 # Copy configuration files and scripts
 COPY warp-setup.sh /usr/local/bin/warp-setup.sh
