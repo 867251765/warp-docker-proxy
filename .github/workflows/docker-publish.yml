@@ -3,7 +3,7 @@ name: Build and Push to GHCR
 # 1. 触发条件：推送到 main 分支或创建新标签时触发
 on:
   push:
-    branches: [ "release_lib" ]
+    branches: [ "master" ]
     tags: [ '*.*.*' ]
   workflow_dispatch:
 
@@ -40,7 +40,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
-            latest-lib
+            latest
       # 6. 设置 Docker Buildx (支持缓存和高级构建)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
