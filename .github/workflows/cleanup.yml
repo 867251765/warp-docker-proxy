@@ -4,6 +4,11 @@ on:
     - cron: '0 0 * * *' # 每天凌晨 00:00 执行
   workflow_dispatch: # 允许手动触发
 
+# --- 新增：关键权限配置 ---
+permissions:
+  contents: read
+  packages: write # 允许推送修改
+
 jobs:
   delete-old-images:
     runs-on: ubuntu-latest
