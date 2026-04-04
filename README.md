@@ -26,7 +26,7 @@ version: '3'
 
 services:
   warp-proxy:
-    image: "ghcr.io/liuxc-hub/warp-docker-proxy:latest"
+    image: "ghcr.io/liuxcserver/warp-docker-proxy:latest"
     container_name: warp-docker-proxy
     hostname: warp-docker-proxy
     ports:
@@ -180,7 +180,7 @@ networks:
 
 #### 镜像更新
 ```bash
-docker pull ghcr.io/liuxc-hub/warp-docker-proxy:latest
+docker pull ghcr.io/liuxcserver/warp-docker-proxy:latest
 docker-compose down
 docker-compose up -d
 ```
