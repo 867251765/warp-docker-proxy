@@ -1,30 +1,26 @@
-name: Delete old SHA images
+name: Cleanup old GHCR SHA images
 on:
+  workflow_dispatch:  # 手动触发
   schedule:
     - cron: '0 0 * * *'
-  workflow_dispatch:
 
 permissions:
-  packages: write  # 必须保留
+  packages: write
   contents: read
 
 jobs:
-  clean-packages:
+  cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Clean up old container images
-        uses: snok/container-retention-policy@v2
+      - name: Delete old SHA images
+        uses: actions/delete-package-versions@v5
         with:
-          # 👇 关键修复：强制改成 org 模式 + 填入你的 GitHub 用户名
-          account-type: org
-          org-name: ${{ github.repository_owner }}  # 自动获取你的用户名/组织名
-
-          # 你的配置保持不变
-          image-names: warp-docker-proxy
-          tag-match-regex: ^sha-.*$
-          cut-off: 7 days ago UTC
-          keep-at-least: 5
+          package-name: warp-docker-proxy
+          package-type: container
           token: ${{ secrets.GITHUB_TOKEN }}
-
-          # 调试先关闭，正式运行用
-          dry-run: false
+          # 只删除以 sha- 开头的标签
+          tag-regex: '^sha-.*'
+          # 保留最新 5 个，删除更早的
+          min-versions-to-keep: 5
+          # 可选：删除多少天前的
+          # delete-older-than: 7d
